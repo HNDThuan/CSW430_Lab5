@@ -21,7 +21,7 @@ export default function LoginScreen({ navigation }) {
         name: res.data.name,
       });
 
-      navigation.replace('Home');
+      navigation.replace('MainTabs');
     } catch (e) {
       Alert.alert('Login failed');
     }
