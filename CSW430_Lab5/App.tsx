@@ -12,6 +12,9 @@ import CustomerScreen from './screens/CustomerScreen';
 import AddCustomerScreen from './screens/AddCustomerScreen';
 import TransactionScreen from './screens/TransactionScreen';
 import TransactionDetailScreen from './screens/TransactionDetailScreen';
+import CustomerDetailScreen from './screens/CustomerDetailScreen';
+import EditCustomerScreen from './screens/EditCustomerScreen';
+import AddTransactionScreen from './screens/AddTransactionScreen';
 
 import { enableScreens } from 'react-native-screens';
 import { MenuProvider } from 'react-native-popup-menu';
@@ -81,6 +84,15 @@ function TransactionStack() {
           headerTintColor: COLORS.white,
         }}
       />
+      <Stack.Screen
+        name="AddTransaction"
+        component={AddTransactionScreen}
+        options={{
+          title: 'Add transaction',
+          headerStyle: { backgroundColor: COLORS.primary },
+          headerTintColor: COLORS.white,
+        }}
+      />
     </Stack.Navigator>
   );
 }
@@ -100,6 +112,24 @@ function CustomerStack() {
       <Stack.Screen
         name="AddCustomer"
         component={AddCustomerScreen}
+        options={{
+          title: 'Add customer',
+          headerStyle: { backgroundColor: COLORS.primary },
+          headerTintColor: COLORS.white,
+        }}
+      />
+      <Stack.Screen
+        name="CustomerDetail"
+        component={CustomerDetailScreen}
+        options={{
+          title: 'Customer detail',
+          headerStyle: { backgroundColor: COLORS.primary },
+          headerTintColor: COLORS.white,
+        }}
+      />
+      <Stack.Screen
+        name="EditCustomer"
+        component={EditCustomerScreen}
         options={{
           title: 'Add customer',
           headerStyle: { backgroundColor: COLORS.primary },

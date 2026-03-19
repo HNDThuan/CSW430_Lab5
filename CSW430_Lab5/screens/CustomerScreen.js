@@ -40,7 +40,9 @@ export default function CustomerScreen({ navigation }) {
     );
 
     const renderCustomer = ({ item }) => (
-        <View style={styles.card}>
+        <TouchableOpacity
+            style={styles.card}
+            onPress={() => navigation.navigate('CustomerDetail', { id: item._id })}>
             <View style={styles.cardContent}>
                 <Text style={styles.label}>
                     Customer: <Text style={styles.value}>{item.name}</Text>
@@ -65,7 +67,7 @@ export default function CustomerScreen({ navigation }) {
                     {item.loyalty === 'member' ? 'Member' : 'Guest'}
                 </Text>
             </View>
-        </View>
+        </TouchableOpacity>
     );
 
     return (

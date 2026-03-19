@@ -1,7 +1,13 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import api from '../api/api';
 import { COLORS } from '../theme/color';
+import {
+    Menu,
+    MenuOptions,
+    MenuOption,
+    MenuTrigger,
+} from 'react-native-popup-menu';
 
 const formatMoney = amount => {
     if (!amount && amount !== 0) return '0 đ';
@@ -15,21 +21,68 @@ const formatDateTime = dateStr => {
     return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 };
 
-export default function TransactionDetailScreen({ route }) {
+export default function TransactionDetailScreen({ route, navigation }) {
     const { id } = route.params;
     const [transaction, setTransaction] = useState(null);
 
+    const loadTransaction = async () => {
+        try {
+            const res = await api.get(`/transactions/${id}`);
+            setTransaction(res.data);
+        } catch (e) {
+            console.log('Error loading transaction:', e);
+        }
+    };
+
     useEffect(() => {
-        const loadTransaction = async () => {
-            try {
-                const res = await api.get(`/transactions/${id}`);
-                setTransaction(res.data);
-            } catch (e) {
-                console.log('Error loading transaction:', e);
-            }
-        };
         loadTransaction();
     }, [id]);
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <Menu>
+                    <MenuTrigger>
+                        <Text style={styles.menu}>⋮</Text>
+                    </MenuTrigger>
+                    <MenuOptions>
+                        <MenuOption onSelect={handleCancel}>
+                            <Text style={[styles.menuItem, { color: 'red' }]}>
+                                Cancel
+                            </Text>
+                        </MenuOption>
+                    </MenuOptions>
+                </Menu>
+            ),
+        });
+    }, [navigation, transaction]);
+
+    const handleCancel = () => {
+        Alert.alert(
+            'Alert',
+            'Are you sure you want to cancel this transaction? This will not be possible to return',
+            [
+                { text: 'CANCEL', style: 'cancel' },
+                {
+                    text: 'DELETE',
+                    style: 'destructive',
+                    onPress: confirmCancel,
+                },
+            ],
+            { cancelable: true },
+        );
+    };
+
+    const confirmCancel = async () => {
+        try {
+            await api.delete(`/transactions/${id}`);
+            Alert.alert('Success', 'Transaction has been cancelled');
+            loadTransaction();
+        } catch (e) {
+            Alert.alert('Error', 'Failed to cancel transaction');
+            console.log('Cancel transaction error:', e);
+        }
+    };
 
     if (!transaction) {
         return (
@@ -215,5 +268,14 @@ const styles = StyleSheet.create({
         textAlign: 'right',
         flex: 1,
         marginLeft: 16,
+    },
+    menu: {
+        color: '#fff',
+        fontSize: 22,
+        paddingHorizontal: 16,
+    },
+    menuItem: {
+        padding: 12,
+        fontSize: 16,
     },
 });

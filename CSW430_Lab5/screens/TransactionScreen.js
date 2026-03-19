@@ -80,7 +80,9 @@ export default function TransactionScreen({ navigation }) {
                 renderItem={renderTransaction}
                 contentContainerStyle={{ paddingBottom: 80 }}
             />
-            <TouchableOpacity style={styles.fab}>
+            <TouchableOpacity
+                style={styles.fab}
+                onPress={() => navigation.navigate('AddTransaction')}>
                 <Icon name="add" size={30} color={COLORS.white} />
             </TouchableOpacity>
         </View>
